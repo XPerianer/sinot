@@ -22,7 +22,8 @@ def create_study_params(file_path):
         "distribution": "normal",
         "mean": 0,
         "std": 1,
-        "boarders": (-1, 1)}
+        "boarders": (-1, 1),
+    }
 
     exposures = []
     outcomes = []
@@ -46,25 +47,32 @@ def create_study_params(file_path):
             rows_params["exposures"][node] = {
                 "gamma": 1,
                 "tau": 1,
-                "treatment_effect": 1}
+                "treatment_effect": 1,
+            }
         elif node in outcomes:
             rows_params["outcome"] = {
                 "name": node,
                 "X_0": 0,
                 "sigma_b": 0.1,
                 "sigma_0": 0.1,
-                "boarders": (-1, 1)}
+                "boarders": (-1, 1),
+            }
         else:
             rows_params["variables"][node] = def_parmas
-    rows_params["dependencies"] = {"{} -> {}".format(out_edge, in_edge): 1 for out_edge, in_edge in
-                                   zip(outgoing, incoming)}
+    rows_params["dependencies"] = {
+        "{} -> {}".format(out_edge, in_edge): 1
+        for out_edge, in_edge in zip(outgoing, incoming)
+    }
     return rows_params
 
 
 def main():
     # Create parser to use this file from command line
-    parser = argparse.ArgumentParser(prog='creaty_study_params.py', usage='%(prog)s [input] [output]',
-                                     description="Transforms a study parameters file as json out of a dagitty tree.")
+    parser = argparse.ArgumentParser(
+        prog="creaty_study_params.py",
+        usage="%(prog)s [input] [output]",
+        description="Transforms a study parameters file as json out of a dagitty tree.",
+    )
 
     # Input file should be one file containing descr of the daggicty graph.
     parser.add_argument("input", type=str, nargs="*", help="Path to dagitty text file.")
