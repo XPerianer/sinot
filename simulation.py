@@ -118,7 +118,6 @@ def simulate_treatment(
     tau = params["tau"]
     treatment_effect = params["treatment_effect"]
 
-    print(treatment_arr)
     # Generate
     treatment_effects_array = gen_treatment_effect(
         treatment_arr, gamma, tau, treatment_effect
@@ -429,7 +428,6 @@ class Simulation:
             start_day_number = 1
         else:
             start_day_number = round(start_day_number + 1)
-        print(start_day_number)
         # Generate Data
         result = {
             "patient_id": [patient_id] * length,
