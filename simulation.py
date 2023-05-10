@@ -372,11 +372,15 @@ class Simulation:
         else:
             self.drop_out = {}
 
+    @staticmethod
+    def empty_dataframe():
+        return pd.DataFrame(columns=["patient_id", "block", "date", "day", "treatment"])
+
     def step_patient(
         self,
         treatment,
         days_per_period,
-        data=pd.DataFrame(columns=["patient_id", "block", "date", "day", "treatment"]),
+        data=empty_dataframe(),
         patient_id=0,
         drop_out=None,
         first_day=None,
@@ -397,12 +401,19 @@ class Simulation:
         dti = pd.date_range(first_day, periods=length, freq="D")
         study_design = []
         if len(data):
-            study_design = [*data[data["patient_id"] == patient_id].groupby(["block"]).sample(n=1)["treatment"], *[treatment]]
+            study_design = [
+                *data[data["patient_id"] == patient_id]
+                .groupby(["block"])
+                .sample(n=1)["treatment"],
+                *[treatment],
+            ]
         else:
             study_design = [treatment]
 
         current_block_index = data[data["patient_id"] == patient_id]["block"].max() + 1
-        current_block_index = current_block_index if not math.isnan(current_block_index) else 1
+        current_block_index = (
+            current_block_index if not math.isnan(current_block_index) else 1
+        )
         block = [current_block_index] * length
 
         # Generate Variables with dependencies
